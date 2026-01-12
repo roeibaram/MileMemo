@@ -1,0 +1,82 @@
+.saved {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.saved__item {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.saved__row {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: none;
+  cursor: pointer;
+  display: grid;
+  gap: 4px;
+}
+
+.saved__title {
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.saved__airline {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.saved__details {
+  border-top: 1px solid #e5e7eb;
+  padding: 10px 12px;
+  display: grid;
+  gap: 10px;
+  background: #fafafa;
+}
+
+.saved__details-top {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.saved__logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #f3f4f6;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.saved__details-text {
+  font-size: 12px;
+  color: #374151;
+  display: grid;
+  gap: 4px;
+}
+
+.saved__remove {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid #fecaca;
+  background: #fff1f2;
+  color: #9f1239;
+  font-weight: 800;
+  cursor: pointer;
+  justify-self: start;
+}
+
+.saved__remove:hover {
+  opacity: 0.92;
+}
