@@ -31,36 +31,38 @@ function App() {
       return;
     }
 
-    const flights = data.data.map((flight, index) => {
-      const flightNumber = flight.flight?.iata || "";
-      const airline = flight.airline?.name || "";
-      const depIata = flight.departure?.iata || "";
-      const arrIata = flight.arrival?.iata || "";
+    const flights = data.data
+      .map((flight, index) => {
+        const flightNumber = flight.flight?.iata || "";
+        const airline = flight.airline?.name || "";
+        const depIata = flight.departure?.iata || "";
+        const arrIata = flight.arrival?.iata || "";
 
-      const depTime =
-        flight.departure?.scheduled || flight.departure?.estimated || "";
-      const arrTime =
-        flight.arrival?.scheduled || flight.arrival?.estimated || "";
+        const depTime =
+          flight.departure?.scheduled || flight.departure?.estimated || "";
+        const arrTime =
+          flight.arrival?.scheduled || flight.arrival?.estimated || "";
 
-      const aircraft =
-        flight.aircraft?.iata ||
-        flight.aircraft?.icao ||
-        flight.airplane?.iata ||
-        flight.airplane?.icao ||
-        "";
+        const aircraft =
+          flight.aircraft?.iata ||
+          flight.aircraft?.icao ||
+          flight.airplane?.iata ||
+          flight.airplane?.icao ||
+          "";
 
-      return {
-        id: `${flightNumber}-${depIata}-${arrIata}-${index}`,
-        airline,
-        flightNumber,
-        from: depIata,
-        to: arrIata,
-        date: date || "",
-        depTime,
-        arrTime,
-        aircraft,
-      };
-    });
+        return {
+          id: `${flightNumber}-${depIata}-${arrIata}-${index}`,
+          airline,
+          flightNumber,
+          from: depIata,
+          to: arrIata,
+          date: date || "",
+          depTime,
+          arrTime,
+          aircraft,
+        };
+      })
+      .filter((flight) => !date || flight.depTime?.slice(0, 10) === date);
 
     setResults(flights);
   }
