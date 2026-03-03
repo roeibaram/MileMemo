@@ -13,8 +13,10 @@ they’ve traveled throughout their life.
 
 - Search flights by origin, destination, and date
 - View scheduled flight details (airline, flight number, times)
-- Save flights to a personal trip history
-- Track total miles flown across all saved flights
+- Save flights to a personal trip history and assign each flight to a trip
+- Create trips with notes, a profile/cover photo, and gallery photos
+- Track total estimated miles flown across saved flights
+- Plot saved routes on a live map background with airport points + route lines
 - Data persists locally using browser storage
 
 ## Tech Stack
@@ -28,5 +30,5 @@ they’ve traveled throughout their life.
 
 🚧 In active development:
 v1: Flight log + save + totals
-v2: Trips (group flights + notes/photos)
+v2: Trips (group flights + notes/photos + trip profile image + photo gallery)
 v3: Map View

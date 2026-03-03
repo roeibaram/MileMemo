@@ -1,0 +1,73 @@
+.map-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.map-bg__map {
+  position: absolute;
+  inset: -12px;
+  transform: scale(1.015);
+  filter: saturate(0.9) contrast(1.03);
+}
+
+.map-bg--ambient {
+  pointer-events: none;
+}
+
+.map-bg--focus {
+  pointer-events: auto;
+}
+
+.map-bg__wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(254, 234, 194, 0.52), transparent 48%),
+    radial-gradient(circle at 84% 78%, rgba(169, 212, 225, 0.46), transparent 45%),
+    linear-gradient(165deg, rgba(249, 244, 232, 0.7), rgba(235, 244, 251, 0.74));
+}
+
+.map-bg__grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.25;
+  background-image: repeating-linear-gradient(
+    35deg,
+    rgba(58, 88, 110, 0.08),
+    rgba(58, 88, 110, 0.08) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+}
+
+.map-bg--ambient .map-bg__wash {
+  background:
+    radial-gradient(circle at 20% 12%, rgba(254, 234, 194, 0.28), transparent 46%),
+    radial-gradient(circle at 86% 80%, rgba(169, 212, 225, 0.26), transparent 44%),
+    linear-gradient(165deg, rgba(249, 244, 232, 0.34), rgba(235, 244, 251, 0.32));
+}
+
+.map-bg--ambient .map-bg__grain {
+  opacity: 0.1;
+}
+
+.map-bg--focus .map-bg__map {
+  inset: 0;
+  transform: none;
+  filter: saturate(1) contrast(1.08);
+}
+
+.map-bg--focus .map-bg__wash {
+  background:
+    radial-gradient(circle at 15% 9%, rgba(255, 236, 204, 0.12), transparent 44%),
+    radial-gradient(circle at 84% 82%, rgba(182, 223, 236, 0.12), transparent 44%),
+    linear-gradient(165deg, rgba(246, 250, 252, 0.08), rgba(233, 243, 250, 0.08));
+}
+
+.map-bg--focus .map-bg__grain {
+  opacity: 0.04;
+}

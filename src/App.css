@@ -1,84 +1,274 @@
 .app {
+  --ink-900: #13293d;
+  --ink-700: #1f425f;
+  --ink-500: #3f5f78;
+  --line: rgba(21, 57, 85, 0.26);
+  --card: rgba(251, 248, 240, 0.74);
+  --card-strong: rgba(255, 251, 245, 0.81);
+  --accent: #e97924;
+  --accent-cool: #0f8bb7;
   min-height: 100vh;
   width: 100%;
-  padding: 48px 18px;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color: rgba(255, 255, 255, 0.92);
+  padding: 34px 20px 28px;
+  color: var(--ink-900);
+  font-family: "Avenir Next", "Trebuchet MS", "Gill Sans", sans-serif;
+  position: relative;
+}
 
-  background: radial-gradient(
-      900px 500px at 18% 12%,
-      rgba(124, 58, 237, 0.35),
-      transparent 60%
-    ),
-    radial-gradient(
-      900px 500px at 86% 18%,
-      rgba(56, 189, 248, 0.18),
-      transparent 55%
-    ),
-    radial-gradient(
-      1100px 700px at 55% 85%,
-      rgba(16, 185, 129, 0.12),
-      transparent 60%
-    ),
-    #0b1020;
+.app--map-focus .app__wrap {
+  pointer-events: none;
+}
+
+.app--map-focus .app__header,
+.app--map-focus .app__map-card,
+.app--map-focus .app__footer {
+  pointer-events: auto;
+}
+
+.app::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 168, 87, 0.12), transparent 45%),
+    radial-gradient(circle at 82% 84%, rgba(33, 163, 196, 0.12), transparent 44%);
 }
 
 .app__wrap {
-  max-width: 1200px;
+  max-width: 1320px;
   width: 100%;
   margin: 0 auto;
+  position: relative;
+  z-index: 2;
 }
 
 .app__header {
-  margin-bottom: 18px;
+  margin-bottom: 14px;
+}
+
+.app__eyebrow {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-700);
 }
 
 .app__title {
-  margin: 0;
-  font-size: 46px;
+  margin: 7px 0 0;
+  font-family: "Baskerville", "Palatino Linotype", serif;
+  font-size: clamp(34px, 5.8vw, 62px);
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.015em;
+  color: var(--ink-900);
 }
 
 .app__subtitle {
   margin: 8px 0 0;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.65);
+  font-size: 15px;
+  color: var(--ink-700);
+}
+
+.app__view-switch {
+  margin: 10px 0 0;
+  width: fit-content;
+  display: inline-flex;
+  gap: 4px;
+  border: 1px solid rgba(21, 57, 85, 0.28);
+  border-radius: 999px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(3px);
+}
+
+.app__view-btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-700);
+  background: transparent;
+  cursor: pointer;
+}
+
+.app__view-btn--active {
+  color: #fffef8;
+  background: linear-gradient(145deg, #1f7fa0, #175e7f);
+}
+
+.app__storage-warning {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #9c2d23;
 }
 
 .app__grid {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 18px;
-  margin-top: 18px;
+  grid-template-columns: 1.02fr 0.98fr;
+  gap: 16px;
+  align-items: start;
+  margin-top: 14px;
 }
 
 .app__panel {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
-  padding: 14px;
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 15px;
+  box-shadow: 0 20px 34px rgba(12, 42, 68, 0.2);
+  backdrop-filter: blur(7px);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: panel-in 0.48s ease forwards;
 }
 
 .app__panel--strong {
-  background: rgba(255, 255, 255, 0.09);
+  background: var(--card-strong);
+  animation-delay: 0.12s;
+}
+
+@keyframes panel-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .app__panel-title {
-  margin: 0 0 12px;
-  font-size: 16px;
+  margin: 0 0 11px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
   font-weight: 800;
+  color: var(--ink-700);
 }
 
 .app__empty {
-  margin: 10px 0 0;
+  margin: 9px 0 0;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--ink-500);
+}
+
+.app__empty--error {
+  color: #9f241f;
+}
+
+.app__map-mode {
+  min-height: 64vh;
+  display: grid;
+  align-content: start;
+}
+
+.app__map-card {
+  width: min(460px, 100%);
+  border: 1px solid rgba(21, 57, 85, 0.3);
+  border-radius: 18px;
+  padding: 14px;
+  background: rgba(255, 254, 248, 0.8);
+  box-shadow: 0 16px 26px rgba(13, 40, 64, 0.18);
+  backdrop-filter: blur(4px);
+}
+
+.app__map-text {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--ink-500);
+}
+
+.app__map-kpis {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.app__map-kpis div {
+  border: 1px solid rgba(21, 57, 85, 0.26);
+  border-radius: 11px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.62);
+  display: grid;
+  gap: 2px;
+}
+
+.app__map-kpi-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-500);
+}
+
+.app__map-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.app__map-list-item {
+  border: 1px solid rgba(21, 57, 85, 0.2);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.63);
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  color: #1d4763;
+}
+
+.app__footer {
+  margin-top: 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(21, 57, 85, 0.2);
+  background: rgba(255, 255, 255, 0.52);
+  padding: 10px 12px;
+  width: fit-content;
+}
+
+.app__footer-main {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1c4d6f;
+}
+
+.app__footer-sub {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #426176;
 }
 
 @media (max-width: 900px) {
   .app__grid {
     grid-template-columns: 1fr;
+  }
+
+  .app {
+    padding: 18px 12px 16px;
+  }
+
+  .app__title {
+    font-size: clamp(30px, 9vw, 48px);
+  }
+
+  .app__map-card {
+    width: 100%;
+  }
+
+  .app__map-list-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .app__footer {
+    width: 100%;
   }
 }

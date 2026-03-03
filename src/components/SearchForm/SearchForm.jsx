@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./SearchForm.css";
 
-function SearchForm({ onSearch }) {
+function SearchForm({ onSearch, isLoading }) {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [date, setDate] = useState("");
@@ -17,6 +17,10 @@ function SearchForm({ onSearch }) {
         className="search__input"
         placeholder="From (e.g TLV)"
         value={from}
+        maxLength={3}
+        pattern="[A-Za-z]{3}"
+        title="Use a 3-letter airport code"
+        required
         onChange={(e) => setFrom(e.target.value)}
       />
 
@@ -24,6 +28,10 @@ function SearchForm({ onSearch }) {
         className="search__input"
         placeholder="To (e.g JFK)"
         value={to}
+        maxLength={3}
+        pattern="[A-Za-z]{3}"
+        title="Use a 3-letter airport code"
+        required
         onChange={(e) => setTo(e.target.value)}
       />
 
@@ -34,8 +42,8 @@ function SearchForm({ onSearch }) {
         onChange={(e) => setDate(e.target.value)}
       />
 
-      <button className="search__btn" type="submit">
-        Search
+      <button className="search__btn" type="submit" disabled={isLoading}>
+        {isLoading ? "Searching..." : "Search"}
       </button>
     </form>
   );

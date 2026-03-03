@@ -1,0 +1,42 @@
+.stats {
+  margin-bottom: 14px;
+}
+
+.stats__cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.stats__card {
+  border: 1px solid rgba(21, 57, 85, 0.22);
+  border-radius: 12px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.stats__label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(27, 66, 91, 0.8);
+}
+
+.stats__value {
+  margin: 4px 0 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #16334d;
+}
+
+.stats__note {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #355a73;
+}
+
+@media (max-width: 560px) {
+  .stats__cards {
+    grid-template-columns: 1fr;
+  }
+}
