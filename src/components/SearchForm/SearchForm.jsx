@@ -13,6 +13,8 @@ function SearchForm({ onSearch, isLoading }) {
 
   function handleSubmit(e) {
     e.preventDefault();
+    // Ignore submits while data is still invalid/loading.
+    if (isSubmitDisabled) return;
     onSearch(from.trim().toUpperCase(), to.trim().toUpperCase(), date);
   }
 
