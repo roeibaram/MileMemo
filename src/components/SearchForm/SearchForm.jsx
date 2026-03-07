@@ -1,10 +1,15 @@
 import { useState } from "react";
 import "./SearchForm.css";
 
+function sanitizeAirportCode(value) {
+  return value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3);
+}
+
 function SearchForm({ onSearch, isLoading }) {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [date, setDate] = useState("");
+  const isSubmitDisabled = isLoading || from.length !== 3 || to.length !== 3;
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -21,7 +26,7 @@ function SearchForm({ onSearch, isLoading }) {
         pattern="[A-Za-z]{3}"
         title="Use a 3-letter airport code"
         required
-        onChange={(e) => setFrom(e.target.value)}
+        onChange={(e) => setFrom(sanitizeAirportCode(e.target.value))}
       />
 
       <input
@@ -32,7 +37,7 @@ function SearchForm({ onSearch, isLoading }) {
         pattern="[A-Za-z]{3}"
         title="Use a 3-letter airport code"
         required
-        onChange={(e) => setTo(e.target.value)}
+        onChange={(e) => setTo(sanitizeAirportCode(e.target.value))}
       />
 
       <input
@@ -42,7 +47,7 @@ function SearchForm({ onSearch, isLoading }) {
         onChange={(e) => setDate(e.target.value)}
       />
 
-      <button className="search__btn" type="submit" disabled={isLoading}>
+      <button className="search__btn" type="submit" disabled={isSubmitDisabled}>
         {isLoading ? "Searching..." : "Search"}
       </button>
     </form>
