@@ -12,7 +12,25 @@
   border: 1px solid rgba(21, 57, 85, 0.22);
   border-radius: 12px;
   padding: 10px;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.64);
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.stats__card:nth-child(1) {
+  border-top: 3px solid rgba(241, 132, 56, 0.85);
+}
+
+.stats__card:nth-child(2) {
+  border-top: 3px solid rgba(44, 149, 214, 0.78);
+}
+
+.stats__card:nth-child(3) {
+  border-top: 3px solid rgba(74, 184, 144, 0.75);
+}
+
+.stats__card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(19, 52, 74, 0.1);
 }
 
 .stats__label {
