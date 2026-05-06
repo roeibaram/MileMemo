@@ -1,15 +1,8 @@
 import { useMemo, useState } from "react";
-import { formatMiles, getFlightDistanceMiles } from "../../utils/flightDistance";
+import { readFileAsDataUrl } from "../../utils/files";
+import { formatMiles, getFlightDistanceMiles } from "../../utils/flights";
+import { buildTripCards } from "../../utils/trips";
 import "./TripJournal.css";
-
-function readFileAsDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(typeof reader.result === "string" ? reader.result : "");
-    reader.onerror = () => reject(new Error("Could not read image file."));
-    reader.readAsDataURL(file);
-  });
-}
 
 function formatTripDates(startDate, endDate) {
   if (!startDate && !endDate) return "No dates yet";
@@ -33,21 +26,7 @@ function TripJournal({
   const [note, setNote] = useState("");
   const [formError, setFormError] = useState("");
 
-  const groupedFlights = useMemo(() => {
-    return trips.map((trip) => {
-      const tripFlights = flights.filter((flight) => flight.tripId === trip.id);
-      const tripMiles = tripFlights.reduce((total, flight) => {
-        const miles = getFlightDistanceMiles(flight);
-        return miles === null ? total : total + miles;
-      }, 0);
-
-      return {
-        ...trip,
-        flights: tripFlights,
-        miles: tripMiles,
-      };
-    });
-  }, [trips, flights]);
+  const tripCards = useMemo(() => buildTripCards(trips, flights), [trips, flights]);
 
   function handleCreateTrip(event) {
     event.preventDefault();
@@ -149,7 +128,7 @@ function TripJournal({
       </form>
 
       <div className="journal__list">
-        {groupedFlights.map((trip, index) => (
+        {tripCards.map((trip, index) => (
           <article
             className="trip-card"
             key={trip.id}

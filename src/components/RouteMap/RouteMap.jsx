@@ -1,26 +1,11 @@
 import { useEffect, useMemo, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { getAirportCoordinates } from "../../utils/airportCoordinates";
-import "./FlightMapBackground.css";
+import { MAP_HOME_CENTER, MAP_HOME_ZOOM } from "../../constants/app";
+import { buildRouteSegments } from "../../utils/routes";
+import "./RouteMap.css";
 
-function buildRouteSegments(flights) {
-  return flights
-    .map((flight) => {
-      const from = getAirportCoordinates(flight.from);
-      const to = getAirportCoordinates(flight.to);
-
-      if (!from || !to) return null;
-      return {
-        id: flight.id,
-        from,
-        to,
-      };
-    })
-    .filter((segment) => Boolean(segment));
-}
-
-function FlightMapBackground({ flights, mode = "ambient" }) {
+function RouteMap({ flights, mode = "ambient" }) {
   const mapRootRef = useRef(null);
   const mapRef = useRef(null);
   const routeLayerRef = useRef(null);
@@ -40,7 +25,7 @@ function FlightMapBackground({ flights, mode = "ambient" }) {
       keyboard: isFocusMode,
       touchZoom: isFocusMode,
       zoomSnap: 0.5,
-    }).setView([18, 7], 2);
+    }).setView(MAP_HOME_CENTER, MAP_HOME_ZOOM);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
@@ -105,11 +90,16 @@ function FlightMapBackground({ flights, mode = "ambient" }) {
       map.flyToBounds(bounds.pad(0.28), {
         animate: true,
         duration: isFocusMode ? 0.9 : 1.1,
+        paddingTopLeft: isFocusMode ? L.point(500, 56) : undefined,
+        paddingBottomRight: isFocusMode ? L.point(48, 48) : undefined,
       });
       return;
     }
 
-    map.flyTo([18, 7], 2, { animate: true, duration: isFocusMode ? 0.8 : 1 });
+    map.flyTo(MAP_HOME_CENTER, MAP_HOME_ZOOM, {
+      animate: true,
+      duration: isFocusMode ? 0.8 : 1,
+    });
   }, [routeSegments, isFocusMode]);
 
   return (
@@ -124,4 +114,4 @@ function FlightMapBackground({ flights, mode = "ambient" }) {
   );
 }
 
-export default FlightMapBackground;
+export default RouteMap;

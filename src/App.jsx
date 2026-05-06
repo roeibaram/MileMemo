@@ -1,71 +1,22 @@
 import { useState, useEffect } from "react";
+import { searchFlights } from "./api/flightsApi";
+import {
+  CREATOR_NAME,
+  DEFAULT_TRIP_ID,
+} from "./constants/app";
+import RouteMap from "./components/RouteMap/RouteMap";
 import SearchForm from "./components/SearchForm/SearchForm";
 import ResultsList from "./components/ResultsList/ResultsList";
-import SavedStats from "./components/SavedStats/SavedStats";
+import StatsBar from "./components/StatsBar/StatsBar";
 import TripJournal from "./components/TripJournal/TripJournal";
-import FlightMapBackground from "./components/FlightMapBackground/FlightMapBackground";
+import { getRecentRoutes, getUniqueRouteCount } from "./utils/routes";
+import { readSavedJournal, saveJournal } from "./utils/storage";
+import {
+  createDefaultTrip,
+  createTripId,
+  normalizeTrip,
+} from "./utils/trips";
 import "./App.css";
-
-const BASE_URL = "https://api.aviationstack.com/v1/flights";
-const FLIGHTS_STORAGE_KEY = "savedFlights";
-const TRIPS_STORAGE_KEY = "savedTrips";
-const DEFAULT_TRIP_ID = "trip-open-sky";
-const CREATOR_NAME = "Roei Baram";
-
-function createDefaultTrip() {
-  return {
-    id: DEFAULT_TRIP_ID,
-    name: "Open Sky",
-    location: "Unassigned Flights",
-    startDate: "",
-    endDate: "",
-    note: "Flights you have not assigned to a trip yet.",
-    coverPhoto: "",
-    photos: [],
-  };
-}
-
-function normalizeTrip(rawTrip, fallbackId) {
-  if (!rawTrip || typeof rawTrip !== "object") return null;
-
-  const id =
-    typeof rawTrip.id === "string" && rawTrip.id.trim()
-      ? rawTrip.id.trim()
-      : fallbackId;
-  const name =
-    typeof rawTrip.name === "string" && rawTrip.name.trim()
-      ? rawTrip.name.trim()
-      : "Untitled Trip";
-
-  return {
-    id,
-    name,
-    location:
-      typeof rawTrip.location === "string" ? rawTrip.location.trim() : "",
-    startDate:
-      typeof rawTrip.startDate === "string" ? rawTrip.startDate : "",
-    endDate: typeof rawTrip.endDate === "string" ? rawTrip.endDate : "",
-    note: typeof rawTrip.note === "string" ? rawTrip.note.trim() : "",
-    coverPhoto:
-      typeof rawTrip.coverPhoto === "string" ? rawTrip.coverPhoto : "",
-    photos: Array.isArray(rawTrip.photos)
-      ? rawTrip.photos.filter((photo) => typeof photo === "string" && photo)
-      : [],
-  };
-}
-
-function normalizeTrips(inputTrips) {
-  if (!Array.isArray(inputTrips)) return [createDefaultTrip()];
-
-  const normalized = inputTrips
-    .map((trip, index) => normalizeTrip(trip, `trip-${Date.now()}-${index}`))
-    .filter((trip) => Boolean(trip));
-
-  if (!normalized.length) return [createDefaultTrip()];
-  if (normalized.some((trip) => trip.id === DEFAULT_TRIP_ID)) return normalized;
-
-  return [createDefaultTrip(), ...normalized];
-}
 
 function App() {
   const [results, setResults] = useState([]);
@@ -84,43 +35,14 @@ function App() {
   }
 
   useEffect(() => {
-    const storedTrips = localStorage.getItem(TRIPS_STORAGE_KEY);
-    const storedFlights = localStorage.getItem(FLIGHTS_STORAGE_KEY);
-
-    let parsedTrips = [createDefaultTrip()];
-    if (storedTrips) {
-      try {
-        parsedTrips = normalizeTrips(JSON.parse(storedTrips));
-      } catch {
-        parsedTrips = [createDefaultTrip()];
-      }
-    }
-    setTrips(parsedTrips);
-
-    if (!storedFlights) return;
-
-    try {
-      const parsedFlights = JSON.parse(storedFlights);
-      if (Array.isArray(parsedFlights)) {
-        const tripIds = new Set(parsedTrips.map((trip) => trip.id));
-        setSavedFlights(
-          parsedFlights.map((flight) => {
-            const tripId = tripIds.has(flight?.tripId)
-              ? flight.tripId
-              : DEFAULT_TRIP_ID;
-            return { ...flight, tripId };
-          })
-        );
-      }
-    } catch {
-      localStorage.removeItem(FLIGHTS_STORAGE_KEY);
-    }
+    const savedJournal = readSavedJournal();
+    setTrips(savedJournal.trips);
+    setSavedFlights(savedJournal.savedFlights);
   }, []);
 
   useEffect(() => {
     try {
-      localStorage.setItem(FLIGHTS_STORAGE_KEY, JSON.stringify(savedFlights));
-      localStorage.setItem(TRIPS_STORAGE_KEY, JSON.stringify(trips));
+      saveJournal({ savedFlights, trips });
       setStorageError("");
     } catch {
       setStorageError(
@@ -137,64 +59,12 @@ function App() {
       return;
     }
 
-    const apiKey = import.meta.env.VITE_AVIATIONSTACK_KEY;
-    if (!apiKey) {
-      setError("Missing API key. Add VITE_AVIATIONSTACK_KEY in your .env file.");
-      setResults([]);
-      setHasSearched(true);
-      return;
-    }
-
-    const url = `${BASE_URL}?access_key=${apiKey}&dep_iata=${from}&arr_iata=${to}`;
-
     setError("");
     setIsLoading(true);
     setHasSearched(true);
 
     try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Search failed. Try again in a moment.");
-      }
-
-      const data = await response.json();
-      if (!Array.isArray(data.data)) {
-        throw new Error("Unexpected API response.");
-      }
-
-      const flights = data.data
-        .map((flight, index) => {
-          const flightNumber = flight.flight?.iata || "";
-          const airline = flight.airline?.name || "";
-          const depIata = flight.departure?.iata || "";
-          const arrIata = flight.arrival?.iata || "";
-
-          const depTime =
-            flight.departure?.scheduled || flight.departure?.estimated || "";
-          const arrTime =
-            flight.arrival?.scheduled || flight.arrival?.estimated || "";
-
-          const aircraft =
-            flight.aircraft?.iata ||
-            flight.aircraft?.icao ||
-            flight.airplane?.iata ||
-            flight.airplane?.icao ||
-            "";
-
-          return {
-            id: `${flightNumber}-${depIata}-${arrIata}-${depTime || date || index}`,
-            airline,
-            flightNumber,
-            from: depIata,
-            to: arrIata,
-            date: date || "",
-            depTime,
-            arrTime,
-            aircraft,
-          };
-        })
-        .filter((flight) => !date || flight.depTime?.slice(0, 10) === date);
-
+      const flights = await searchFlights({ from, to, date });
       setResults(flights);
     } catch (searchError) {
       setResults([]);
@@ -225,7 +95,7 @@ function App() {
   }
 
   function handleCreateTrip(tripInput) {
-    const id = `trip-${Date.now()}`;
+    const id = createTripId();
     const nextTrip = normalizeTrip({ ...tripInput, id, photos: [] }, id);
     if (!nextTrip) return;
     setTrips((prev) => [nextTrip, ...prev]);
@@ -249,14 +119,12 @@ function App() {
     }));
   }
 
-  const uniqueRouteCount = new Set(
-    savedFlights.map((flight) => `${flight.from || "UNK"}-${flight.to || "UNK"}`)
-  ).size;
-  const recentRoutes = savedFlights.slice(0, 9);
+  const uniqueRouteCount = getUniqueRouteCount(savedFlights);
+  const recentRoutes = getRecentRoutes(savedFlights);
 
   return (
     <div className={`app ${viewMode === "map" ? "app--map-focus" : ""}`}>
-      <FlightMapBackground
+      <RouteMap
         key={viewMode}
         flights={savedFlights}
         mode={viewMode === "map" ? "focus" : "ambient"}
@@ -314,7 +182,7 @@ function App() {
 
             <div className="app__panel">
               <h2 className="app__panel-title">Trip Journal</h2>
-              <SavedStats flights={savedFlights} />
+              <StatsBar flights={savedFlights} />
               <TripJournal
                 trips={trips}
                 flights={savedFlights}

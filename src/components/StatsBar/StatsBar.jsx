@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { formatMiles, getFlightDistanceMiles } from "../../utils/flightDistance";
-import "./SavedStats.css";
+import { formatMiles, getFlightDistanceMiles } from "../../utils/flights";
+import "./StatsBar.css";
 
-function SavedStats({ flights }) {
+function StatsBar({ flights }) {
   const stats = useMemo(() => {
     const totalFlights = flights.length;
     const uniqueAirlines = new Set(
@@ -59,4 +59,4 @@ function SavedStats({ flights }) {
   );
 }
 
-export default SavedStats;
+export default StatsBar;

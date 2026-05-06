@@ -1,4 +1,4 @@
-import { getAirportCoordinates } from "./airportCoordinates";
+import { getAirportCoordinates } from "./airports";
 
 const EARTH_RADIUS_MILES = 3958.8;
 
