@@ -177,6 +177,10 @@
   display: none;
 }
 
+.trip-card__upload--button {
+  font: inherit;
+}
+
 .trip-card__gallery {
   margin-top: 10px;
   display: grid;

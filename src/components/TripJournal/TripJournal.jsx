@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { readFileAsDataUrl } from "../../utils/files";
 import { formatMiles, getFlightDistanceMiles } from "../../utils/flights";
+import { downloadTripSummary } from "../../utils/tripExport";
 import { buildTripCards } from "../../utils/trips";
 import "./TripJournal.css";
 
@@ -175,6 +176,13 @@ function TripJournal({
                     onChange={(event) => handlePhotosUpload(trip.id, event)}
                   />
                 </label>
+                <button
+                  className="trip-card__upload trip-card__upload--button"
+                  type="button"
+                  onClick={() => downloadTripSummary(trip)}
+                >
+                  Export Summary
+                </button>
               </div>
 
               {trip.photos.length ? (
