@@ -245,6 +245,33 @@
   color: #3f6078;
 }
 
+.trip-card__flight-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.trip-card__move-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #315a72;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.trip-card__move-select {
+  max-width: 150px;
+  border: 1px solid rgba(21, 57, 85, 0.25);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #173f59;
+  font: inherit;
+  padding: 7px 8px;
+}
+
 .trip-card__flight-remove {
   border: 1px solid rgba(159, 36, 31, 0.34);
   border-radius: 9px;
@@ -271,5 +298,9 @@
   .trip-card__flight {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .trip-card__flight-actions {
+    justify-content: flex-start;
   }
 }

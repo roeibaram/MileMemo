@@ -19,6 +19,7 @@ function TripJournal({
   onAddTripPhotos,
   onRemoveTripPhoto,
   onRemoveFlight,
+  onMoveFlight,
 }) {
   const [tripName, setTripName] = useState("");
   const [location, setLocation] = useState("");
@@ -219,13 +220,30 @@ function TripJournal({
                             {miles !== null ? ` | ${formatMiles(miles)} miles` : " | miles unavailable"}
                           </p>
                         </div>
-                        <button
-                          className="trip-card__flight-remove"
-                          type="button"
-                          onClick={() => onRemoveFlight(flight.id)}
-                        >
-                          Remove Flight
-                        </button>
+                        <div className="trip-card__flight-actions">
+                          <label className="trip-card__move-label">
+                            Move
+                            <select
+                              className="trip-card__move-select"
+                              value={flight.tripId || trip.id}
+                              aria-label={`Move ${flight.flightNumber || `${flight.from} to ${flight.to}`} to another trip`}
+                              onChange={(event) => onMoveFlight(flight.id, event.target.value)}
+                            >
+                              {trips.map((tripOption) => (
+                                <option key={tripOption.id} value={tripOption.id}>
+                                  {tripOption.name}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
+                          <button
+                            className="trip-card__flight-remove"
+                            type="button"
+                            onClick={() => onRemoveFlight(flight.id)}
+                          >
+                            Remove Flight
+                          </button>
+                        </div>
                       </li>
                     );
                   })}

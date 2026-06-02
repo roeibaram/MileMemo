@@ -94,6 +94,17 @@ function App() {
     setSavedFlights((prev) => prev.filter((f) => f.id !== id));
   }
 
+  function handleMoveFlight(flightId, requestedTripId) {
+    const isValidTrip = trips.some((trip) => trip.id === requestedTripId);
+    const tripId = isValidTrip ? requestedTripId : DEFAULT_TRIP_ID;
+
+    setSavedFlights((prev) =>
+      prev.map((flight) =>
+        flight.id === flightId ? { ...flight, tripId } : flight
+      )
+    );
+  }
+
   function handleCreateTrip(tripInput) {
     const id = createTripId();
     const nextTrip = normalizeTrip({ ...tripInput, id, photos: [] }, id);
@@ -191,6 +202,7 @@ function App() {
                 onAddTripPhotos={handleAddTripPhotos}
                 onRemoveTripPhoto={handleRemoveTripPhoto}
                 onRemoveFlight={handleRemove}
+                onMoveFlight={handleMoveFlight}
               />
             </div>
           </div>
