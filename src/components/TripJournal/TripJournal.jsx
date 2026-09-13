@@ -27,13 +27,35 @@ function TripJournal({
   const [endDate, setEndDate] = useState("");
   const [note, setNote] = useState("");
   const [formError, setFormError] = useState("");
+  const [sortMode, setSortMode] = useState("recent");
 
   const tripCards = useMemo(() => buildTripCards(trips, flights), [trips, flights]);
+  const sortedTripCards = useMemo(() => {
+    return [...tripCards].sort((firstTrip, secondTrip) => {
+      if (sortMode === "miles") {
+        return secondTrip.miles - firstTrip.miles;
+      }
+
+      if (sortMode === "name") {
+        return firstTrip.name.localeCompare(secondTrip.name);
+      }
+
+      const firstDate = firstTrip.startDate || "9999-12-31";
+      const secondDate = secondTrip.startDate || "9999-12-31";
+
+      return secondDate.localeCompare(firstDate);
+    });
+  }, [sortMode, tripCards]);
 
   function handleCreateTrip(event) {
     event.preventDefault();
     if (!tripName.trim()) {
       setFormError("Trip name is required.");
+      return;
+    }
+
+    if (startDate && endDate && endDate < startDate) {
+      setFormError("End date must be after the start date.");
       return;
     }
 
@@ -129,8 +151,26 @@ function TripJournal({
         </button>
       </form>
 
+      <div className="journal__toolbar">
+        <p className="journal__summary">
+          {tripCards.length} trip{tripCards.length === 1 ? "" : "s"} in your journal
+        </p>
+        <label className="journal__sort">
+          Sort trips
+          <select
+            className="journal__sort-select"
+            value={sortMode}
+            onChange={(event) => setSortMode(event.target.value)}
+          >
+            <option value="recent">Newest trip date</option>
+            <option value="miles">Most miles</option>
+            <option value="name">Trip name A-Z</option>
+          </select>
+        </label>
+      </div>
+
       <div className="journal__list">
-        {tripCards.map((trip, index) => (
+        {sortedTripCards.map((trip, index) => (
           <article
             className="trip-card"
             key={trip.id}

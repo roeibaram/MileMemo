@@ -61,6 +61,44 @@
   color: #a62929;
 }
 
+.journal__toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  border-radius: 16px;
+  border: 1px solid rgba(21, 57, 85, 0.18);
+  background: rgba(255, 255, 255, 0.46);
+  padding: 12px 14px;
+}
+
+.journal__summary {
+  margin: 0;
+  color: #244c66;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.journal__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #315a72;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.journal__sort-select {
+  border: 1px solid rgba(21, 57, 85, 0.25);
+  border-radius: 10px;
+  background: rgba(255, 254, 250, 0.94);
+  color: #173f59;
+  font: inherit;
+  padding: 8px 9px;
+}
+
 .journal__list {
   display: grid;
   gap: 12px;
@@ -293,6 +331,16 @@
 @media (max-width: 680px) {
   .trip-form__grid {
     grid-template-columns: 1fr;
+  }
+
+  .journal__toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .journal__sort {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .trip-card__flight {
