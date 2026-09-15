@@ -2,11 +2,12 @@ import { useState } from "react";
 import { getAirlineLogo } from "../../utils/airlineLogos";
 import "./ResultsList.css";
 
-function ResultsList({ flights, trips, onSave }) {
+function ResultsList({ flights, savedFlights, trips, onSave }) {
   const [selectedTripId, setSelectedTripId] = useState(trips[0]?.id || "");
   const activeTripId = trips.some((trip) => trip.id === selectedTripId)
     ? selectedTripId
     : trips[0]?.id || "";
+  const savedFlightIds = new Set(savedFlights.map((flight) => flight.id));
 
   if (!flights.length) return null;
 
@@ -33,6 +34,7 @@ function ResultsList({ flights, trips, onSave }) {
       <ul className="results">
         {flights.map((flight) => {
           const logo = getAirlineLogo(flight.airline);
+          const isSaved = savedFlightIds.has(flight.id);
 
           return (
             <li className="results__item" key={flight.id}>
@@ -64,6 +66,7 @@ function ResultsList({ flights, trips, onSave }) {
                     {flight.aircraft ? (
                       <span>Aircraft: {flight.aircraft}</span>
                     ) : null}
+                    {isSaved ? <span className="results__saved-label">Saved</span> : null}
                   </div>
                 </div>
               </div>
@@ -72,9 +75,9 @@ function ResultsList({ flights, trips, onSave }) {
                 className="results__btn"
                 type="button"
                 onClick={() => onSave(flight, activeTripId)}
-                disabled={!activeTripId}
+                disabled={!activeTripId || isSaved}
               >
-                Save to Trip
+                {isSaved ? "Saved" : "Save to Trip"}
               </button>
             </li>
           );

@@ -18,6 +18,11 @@ function SearchForm({ onSearch, isLoading }) {
     onSearch(from.trim().toUpperCase(), to.trim().toUpperCase(), date);
   }
 
+  function handleSwapRoute() {
+    setFrom(to);
+    setTo(from);
+  }
+
   return (
     <form className="search" onSubmit={handleSubmit}>
       <input
@@ -41,6 +46,16 @@ function SearchForm({ onSearch, isLoading }) {
         required
         onChange={(e) => setTo(sanitizeAirportCode(e.target.value))}
       />
+
+      <button
+        className="search__swap"
+        type="button"
+        onClick={handleSwapRoute}
+        disabled={isLoading || (!from && !to)}
+        aria-label="Swap origin and destination"
+      >
+        Swap
+      </button>
 
       <input
         className="search__input"

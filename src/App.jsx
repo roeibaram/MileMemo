@@ -183,7 +183,12 @@ function App() {
               ) : isLoading ? (
                 <p className="app__empty">Searching flights...</p>
               ) : results.length ? (
-                <ResultsList flights={results} trips={trips} onSave={handleSave} />
+                <ResultsList
+                  flights={results}
+                  savedFlights={savedFlights}
+                  trips={trips}
+                  onSave={handleSave}
+                />
               ) : hasSearched ? (
                 <p className="app__empty">No flights found for this route/date.</p>
               ) : (

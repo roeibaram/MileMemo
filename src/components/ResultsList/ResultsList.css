@@ -107,6 +107,14 @@
   margin-top: 4px;
 }
 
+.results__saved-label {
+  border-radius: 999px;
+  background: rgba(36, 113, 92, 0.12);
+  color: #256b58;
+  font-weight: 800;
+  padding: 2px 7px;
+}
+
 .results__btn {
   padding: 8px 11px;
   border: 1px solid rgba(13, 95, 124, 0.32);
