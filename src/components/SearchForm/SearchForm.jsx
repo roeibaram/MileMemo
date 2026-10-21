@@ -26,6 +26,7 @@ function SearchForm({ onSearch, isLoading }) {
   return (
     <form className="search" onSubmit={handleSubmit}>
       <input
+        aria-label="Origin airport code"
         className="search__input"
         placeholder="From (e.g TLV)"
         value={from}
@@ -37,6 +38,7 @@ function SearchForm({ onSearch, isLoading }) {
       />
 
       <input
+        aria-label="Destination airport code"
         className="search__input"
         placeholder="To (e.g JFK)"
         value={to}
@@ -58,6 +60,7 @@ function SearchForm({ onSearch, isLoading }) {
       </button>
 
       <input
+        aria-label="Departure date"
         className="search__input"
         type="date"
         value={date}
